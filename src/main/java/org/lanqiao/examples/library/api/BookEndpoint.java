@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javacommon.constants.MediaTypes;
 import javacommon.mapper.BeanMapper;
 import javacommon.web.ErrorCode;
+import javacommon.web.PAGEJSON;
 import javacommon.web.ServiceException;
 
 // Spring Restful MVC Controller的标识, 直接输出内容，不调用template引擎.
@@ -41,14 +42,22 @@ public class BookEndpoint {
 
 	@RequestMapping(value = "/api/books", produces = MediaTypes.JSON_UTF_8)
 	public List<BookDto> listAllBook(Pageable pageable) {
-		Iterable<Book> books = bookAdminService.findAll(pageable);
-
+		List<BookDto> books = bookAdminService.findAll(pageable);
+		/*int c=bookAdminService.findAllBookCount();
+		PAGEJSON p=new PAGEJSON();
+		p.setRows(books);
+		p.setTotal(c);*/
 		return BeanMapper.mapList(books, BookDto.class);
 	}
 
+	/**
+	 * 列出id此书当前状态
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value = "/api/books/{id}", produces = MediaTypes.JSON_UTF_8)
 	public BookDto listOneBook(@PathVariable("id") Long id) {
-		Book book = bookAdminService.findOne(id);
+		BookDto book = bookAdminService.findOne(id);
 
 		return BeanMapper.map(book, BookDto.class);
 	}
@@ -61,10 +70,10 @@ public class BookEndpoint {
 		Account currentUser = accountService.getLoginUser(token);
 
 		// 使用BeanMapper, 将与外部交互的BookDto对象复制为应用内部的Book对象
-		Book book = BeanMapper.map(bookDto, Book.class);
-
+		//Book book = BeanMapper.map(bookDto, Book.class);
+		bookDto.owner=String.valueOf(currentUser.id);
 		// 保存Book对象
-		bookAdminService.saveBook(book, currentUser);
+		bookAdminService.saveBook(bookDto);
 	}
 
 	@RequestMapping(value = "/api/books/{id}/modify", method = RequestMethod.POST, consumes = MediaTypes.JSON_UTF_8)
@@ -76,6 +85,9 @@ public class BookEndpoint {
 		bookAdminService.modifyBook(book, currentUser.id);
 	}
 
+	/**
+	 * 根据id删除一本书
+	 */
 	@RequestMapping(value = "/api/books/{id}/delete")
 	public void deleteBook(@PathVariable("id") Long id, @RequestParam(value = "token", required = false) String token) {
 		checkToken(token);
@@ -115,6 +127,11 @@ public class BookEndpoint {
 		borrowService.rejectBorrowRequest(id, currentUser);
 	}
 
+	/**
+	 * 图书归还
+	 * @param id
+	 * @param token
+	 */
 	@RequestMapping(value = "/api/books/{id}/return")
 	public void markBookReturned(@PathVariable("id") Long id,
 			@RequestParam(value = "token", required = false) String token) {

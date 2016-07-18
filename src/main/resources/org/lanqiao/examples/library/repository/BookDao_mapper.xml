@@ -5,17 +5,19 @@
 <mapper namespace="org.lanqiao.examples.library.repository.BookDao">
 
 	<select id="findByOwnerId" resultType="org.lanqiao.examples.library.dto.BookDto">
-	   <include refid="selectBook"/>
-        where b.owner_id=#{ownerId,jdbcType=VARCHAR}
-        limit #{pageable.pageNumber} , #{pageable.pageSize}
+		<include refid="selectBook" />
+		where b.owner_id=#{ownerId,jdbcType=VARCHAR}
+		limit #{pageable.pageNumber} , #{pageable.pageSize}
 	</select>
-	
+	<select id="findAllBookCount">
+	select count(1) from book
+	</select>
 	<select id="findByBorrowerId" resultType="org.lanqiao.examples.library.dto.BookDto">
-	    <include refid="selectBook"/>
-        where b.borrower_id=#{param1,jdbcType=VARCHAR}
-        limit #{param2.pageNumber} , #{param2.pageSize}
+		<include refid="selectBook" />
+		where b.borrower_id=#{param1,jdbcType=VARCHAR}
+		limit #{param2.pageNumber} , #{param2.pageSize}
 	</select>
-	
+
 	<sql id="selectBook">
 	<![CDATA[
 		SELECT
@@ -34,5 +36,34 @@
 		LEFT JOIN account a1 ON b.owner_id=a1.id
 	 ]]>
 	</sql>
+	<select id="findAllBook" resultType="org.lanqiao.examples.library.dto.BookDto">
+		<include refid="selectBook" />
+	</select>
+	<select id="findOne" parameterType="long" resultType="org.lanqiao.examples.library.dto.BookDto">
+		<include refid="selectBook" />
+		where b.id=#{value}
+	</select>
+	<insert id="save" parameterType="org.lanqiao.examples.library.dto.BookDto">
+  	insert into book (id,douban_id,title,url,owner_id,onboard_date,status,borrower_id,borrow_date) values(#{id},#{doubanId},#{title},#{url},#{owner,jdbcType=INTEGER},#{onboardDate},#{status},#{borrower,jdbcType=INTEGER},#{borrowDate})
+	</insert>
 	
+	<update id="updateBook" parameterType="org.lanqiao.examples.library.dto.BookDto">
+	update book set 
+	 <if test="title!=null and title!=''">
+		title=#{title},
+	 </if>
+	 <if test="title!=null and title!=''">
+		url=#{url},
+	 </if>
+	 <if test="title!=null and title!=''">
+		borrower_id=#{borrower},
+	 </if>  
+	  <if test="title!=null and title!=''">
+		borrow_date=#{borrowDate}
+	 </if> 
+	 where id=#{id}
+	</update>
+	<delete id="delete" parameterType="long">
+		delete from book where id=#{value}
+	</delete>
 </mapper>

@@ -3,6 +3,8 @@ package org.lanqiao.examples.library.api;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.service.AccountService;
 import org.slf4j.Logger;
@@ -25,8 +27,7 @@ public class AccountEndPoint {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountEndPoint.class);
 
-	@Autowired
-	@Qualifier("accountServcie_library")
+	@Resource(name="accountServcie_library")
 	private AccountService accountServcie;
 
 	@RequestMapping(value = "/api/accounts/login", produces = MediaTypes.JSON_UTF_8)

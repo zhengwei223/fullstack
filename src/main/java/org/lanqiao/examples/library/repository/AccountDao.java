@@ -1,7 +1,9 @@
 package org.lanqiao.examples.library.repository;
 
 import org.lanqiao.examples.library.domain.Account;
+import org.lanqiao.examples.library.dto.BookDto;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,4 +17,6 @@ public interface AccountDao extends CrudRepository<Account, Long> {
 	Account findByEmail(String email);
 
 	Account findByLoginName(String loginName);
+
+
 }

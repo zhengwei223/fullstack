@@ -85,8 +85,8 @@ public class BookEndpointTest extends BaseFunctionalTest {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 		// 查询数据库状态
-		Book book = bookDao.findOne(3L);
-		assertThat(book.borrower.id).isEqualTo(1L);
+		BookDto book = bookDao.findOne(3L);
+		assertThat(book.borrower).isEqualTo(1L);
 		assertThat(book.status).isEqualTo(Book.STATUS_REQUEST);
 
 		// 回退操作
@@ -104,7 +104,7 @@ public class BookEndpointTest extends BaseFunctionalTest {
 		ErrorResult errorResult = jsonMapper.fromJson(response.getBody(), ErrorResult.class);
 		assertThat(errorResult.code).isEqualTo(ErrorCode.NO_TOKEN.code);
 
-		Book book = bookDao.findOne(1L);
+		BookDto book = bookDao.findOne(1L);
 		assertThat(book.borrower).isNull();
 
 		// 设置错误token

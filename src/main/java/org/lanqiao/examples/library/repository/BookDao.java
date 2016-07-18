@@ -15,9 +15,16 @@ import org.springframework.stereotype.Repository;
  * 
  */
 @Repository
-public interface BookDao extends PagingAndSortingRepository<Book, Long> {
+public interface BookDao extends PagingAndSortingRepository<BookDto, Long> {
 
-	List<BookDto> findByOwnerId(@Param("ownerId") Long ownerId, @Param("pageable") Pageable pageable);
+	List<BookDto> findByOwnerId(@Param("ownerId") Long ownerId,
+			@Param("pageable") Pageable pageable);
 
 	List<BookDto> findByBorrowerId(Long borrowerId, Pageable pageable);
+
+	List<BookDto> findAllBook(Pageable pageable);
+
+	void updateBook(BookDto book);
+
+	int findAllBookCount();
 }

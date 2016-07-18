@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javacommon.utils.Clock;
+import javacommon.utils.Ids;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
@@ -30,12 +31,12 @@ public class BookAdminService {
 	protected Clock clock = Clock.DEFAULT;
 
 	@Transactional(readOnly = true)
-	public Iterable<Book> findAll(Pageable pageable) {
-		return bookDao.findAll(pageable);
+	public List<BookDto> findAll(Pageable pageable) {
+		return bookDao.findAllBook(pageable);
 	}
 
 	@Transactional(readOnly = true)
-	public Book findOne(Long id) {
+	public BookDto findOne(Long id) {
 		return bookDao.findOne(id);
 	}
 
@@ -45,9 +46,8 @@ public class BookAdminService {
 	}
 
 	@Transactional
-	public void saveBook(Book book, Account owner) {
-
-		book.owner = owner;
+	public void saveBook(BookDto book) {
+		book.id=Ids.randomLong();
 		book.status = Book.STATUS_IDLE;
 		book.onboardDate = clock.getCurrentDate();
 
@@ -61,7 +61,7 @@ public class BookAdminService {
 			throw new ServiceException("User can't modify others book", ErrorCode.BOOK_OWNERSHIP_WRONG);
 		}
 
-		Book orginalBook = bookDao.findOne(book.id);
+		BookDto orginalBook = bookDao.findOne(book.id);
 
 		if (orginalBook == null) {
 			logger.error("user:" + currentAccountId + " try to modified a book:" + book.id + " which is not exist");
@@ -70,23 +70,27 @@ public class BookAdminService {
 
 		orginalBook.title = book.title;
 		orginalBook.url = book.url;
-		bookDao.save(orginalBook);
+		bookDao.updateBook(orginalBook);
 	}
 
 	@Transactional
 	public void deleteBook(Long id, Long currentAccountId) {
-		Book book = bookDao.findOne(id);
+		BookDto book = bookDao.findOne(id);
 
 		if (book == null) {
 			logger.error("user:" + currentAccountId + " try to delete a book:" + id + " which is not exist");
 			throw new ServiceException("The Book is not exist", ErrorCode.BAD_REQUEST);
 		}
 
-		if (!currentAccountId.equals(book.owner.id)) {
+		if (!currentAccountId.equals(book.owner)) {
 			logger.error("user:" + currentAccountId + " try to delete a book:" + book.id + " which is not him");
 			throw new ServiceException("User can't delete others book", ErrorCode.BOOK_OWNERSHIP_WRONG);
 		}
 
 		bookDao.delete(id);
+	}
+
+	public int findAllBookCount() {
+		return bookDao.findAllBookCount();
 	}
 }
