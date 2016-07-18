@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="false">
+	<bean id="shiroDbRealm" class="javacommon.shiro.ShiroDbRealm"></bean>
+	<!-- 权限管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 数据库认证的实现 ShiroDbRealm -->
+		<property name="realm" ref="shiroDbRealm" />
+		<!-- 缓存管理器 -->
+		<property name="cacheManager" ref="shiroEhcacheManager" />
+	</bean>
+	
+	<!-- shiro的主过滤器,beanId 和web.xml中配置的filter name需要保持一致 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 安全管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<!-- 访问地址的过滤规则,从上至下,从左至右的优先级,如果有匹配的规则,就会返回,不会再进行匹配 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/=anon
+				/js/** = anon
+				/css/** = anon
+				/images/** = anon
+				/pages/** = anon
+				<!-- S 目前将upload文件权限放开，等文件系统模块完成以后再修改  -->
+				/upload/**=anon
+				<!-- E  -->
+				
+				/login = authc
+				/logout = logout
+				/static/** = anon
+				/api/** = anon
+				/register/** = anon
+				/admin/** = roles[admin]
+				/** = user
+			</value>
+		</property>
+		<!-- 声明自定义的过滤器 -->
+		<!-- <property name="filters">
+			<map>
+			    访问日志记录的过滤器
+			    <entry key="framefwlog" value-ref="framefwlog"></entry>
+			    权限校验的过滤器
+				<entry key="frameperms" value-ref="frameperms"></entry>
+				 前台用户过滤器
+				<entry key="frontuser" value-ref="frontuser"></entry>
+				
+				 后台用户过滤器
+				<entry key="systemuser" value-ref="systemuser"></entry>
+			    踢出上个账户的过滤器
+			    <entry key="keepone" value-ref="keepone"/>  
+			    
+			</map>
+		</property> -->
+	</bean>
+	
+	<!-- 用户授权信息Cache, 采用EhCache -->
+	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml"/>
+	</bean>
+</beans>
