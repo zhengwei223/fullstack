@@ -5,6 +5,7 @@ import java.util.List;
 import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.domain.Book;
 import org.lanqiao.examples.library.domain.Message;
+import org.lanqiao.examples.library.dto.BookDto;
 import org.lanqiao.examples.library.repository.BookDao;
 import org.lanqiao.examples.library.repository.MessageDao;
 import org.slf4j.Logger;
@@ -164,7 +165,7 @@ public class BookBorrowService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Book> listMyBorrowedBook(Long borrowerId, Pageable pageable) {
+	public List<BookDto> listMyBorrowedBook(Long borrowerId, Pageable pageable) {
 		return bookDao.findByBorrowerId(borrowerId, pageable);
 	}
 }

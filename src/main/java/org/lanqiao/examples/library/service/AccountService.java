@@ -35,8 +35,8 @@ public class AccountService implements ShiroUserService {
 	private AccountDao accountDao;
 
 	// 注入配置值
-	@Value("${app.loginTimeoutSecs:600}")
-	private int loginTimeoutSecs;
+//	@Value("${app.loginTimeoutSecs:600}")
+	private int loginTimeoutSecs=600;
 
 
 	// guava cache

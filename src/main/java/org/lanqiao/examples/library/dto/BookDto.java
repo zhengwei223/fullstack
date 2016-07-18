@@ -14,12 +14,16 @@ public class BookDto {
 	public String url;
 	public String status;
 
-	public AccountDto owner;
+	public String doubanId;
+
+
+	public String owner;
+	public String borrower;
+
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+08:00")
 	public Date onboardDate;
 
-	public AccountDto borrower;
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+08:00")
 	public Date borrowDate;

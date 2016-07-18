@@ -20,10 +20,10 @@ public class Book {
 
 	public String status;
 
-	public Account owner;
 
 	public Date onboardDate;
 
+	public Account owner;
 	public Account borrower;
 
 	public Date borrowDate;

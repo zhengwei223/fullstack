@@ -69,11 +69,11 @@ public class BookEndpointTest extends BaseFunctionalTest {
 		BookDto firstBook = tasks.get(0);
 
 		assertThat(firstBook.title).isEqualTo("Big Data日知录");
-		assertThat(firstBook.owner.name).isEqualTo("Calvin");
+		assertThat(firstBook.owner).isEqualTo("Calvin");
 
 		BookDto book = restTemplate.getForObject(resourceUrl + "/{id}", BookDto.class, 1L);
 		assertThat(book.title).isEqualTo("Big Data日知录");
-		assertThat(book.owner.name).isEqualTo("Calvin");
+		assertThat(book.owner).isEqualTo("Calvin");
 	}
 
 	@Test

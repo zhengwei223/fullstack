@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.lanqiao.examples.library.repository.AccountDao">
+	<select id="findByEmail" resultType="org.lanqiao.examples.library.domain.Account" 
+		parameterType="string">
+	    SELECT
+		t.id AS id,
+		t.`name` AS `name`,
+		t.email AS email,
+		t.hash_password AS hashPassword
+	    FROM
+		account t
+		WHERE t.email=#{value,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findByLoginName" resultType="org.lanqiao.examples.library.domain.Account" parameterType="string">
+	    SELECT
+		t.id AS id,
+		t.`name` AS `name`,
+		t.email AS email,
+		t.hash_password AS hashPassword
+	    FROM
+		account t
+		WHERE t.`name`=#{value,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

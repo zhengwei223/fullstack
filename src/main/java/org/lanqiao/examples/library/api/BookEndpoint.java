@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javacommon.constants.MediaTypes;
 import javacommon.mapper.BeanMapper;
-import javacommon.shiro.ShiroUserService;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
@@ -128,7 +127,7 @@ public class BookEndpoint {
 	public List<BookDto> listMyBook(@RequestParam(value = "token", required = false) String token, Pageable pageable) {
 		checkToken(token);
 		Account currentUser = accountService.getLoginUser(token);
-		List<Book> books = bookAdminService.listMyBook(currentUser.id, pageable);
+		List<BookDto> books = bookAdminService.listMyBook(currentUser.id, pageable);
 		return BeanMapper.mapList(books, BookDto.class);
 	}
 
@@ -137,7 +136,7 @@ public class BookEndpoint {
 			Pageable pageable) {
 		checkToken(token);
 		Account currentUser = accountService.getLoginUser(token);
-		List<Book> books = borrowService.listMyBorrowedBook(currentUser.id, pageable);
+		List<BookDto> books = borrowService.listMyBorrowedBook(currentUser.id, pageable);
 		return BeanMapper.mapList(books, BookDto.class);
 	}
 

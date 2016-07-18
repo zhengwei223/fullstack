@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.domain.Book;
+import org.lanqiao.examples.library.dto.BookDto;
 import org.lanqiao.examples.library.repository.BookDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class BookAdminService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Book> listMyBook(Long ownerId, Pageable pageable) {
+	public List<BookDto> listMyBook(Long ownerId, Pageable pageable) {
 		return bookDao.findByOwnerId(ownerId, pageable);
 	}
 

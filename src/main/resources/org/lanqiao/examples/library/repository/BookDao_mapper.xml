@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.lanqiao.examples.library.repository.BookDao">
+
+	<select id="findByOwnerId" resultType="org.lanqiao.examples.library.dto.BookDto">
+	   <include refid="selectBook"/>
+        where b.owner_id=#{ownerId,jdbcType=VARCHAR}
+        limit #{pageable.pageNumber} , #{pageable.pageSize}
+	</select>
+	
+	<select id="findByBorrowerId" resultType="org.lanqiao.examples.library.dto.BookDto">
+	    <include refid="selectBook"/>
+        where b.borrower_id=#{param1,jdbcType=VARCHAR}
+        limit #{param2.pageNumber} , #{param2.pageSize}
+	</select>
+	
+	<sql id="selectBook">
+	<![CDATA[
+		SELECT
+			b.id AS id,
+			b.douban_id AS doubanId,
+			b.title AS title,
+			b.url AS url,
+			b.`status` AS `status`,
+			a.`name` as `owner`,
+			b.onboard_date as onboardDate,
+		  a1.`name` as borrower,
+			b.borrow_date as borrowDate
+		FROM
+			book b
+		LEFT JOIN account a ON b.owner_id=a.id
+		LEFT JOIN account a1 ON b.owner_id=a1.id
+	 ]]>
+	</sql>
+	
+</mapper>

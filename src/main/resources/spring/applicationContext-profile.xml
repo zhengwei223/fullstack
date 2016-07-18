@@ -19,12 +19,12 @@
 	<!-- libarary项目 -->
  	<beans profile="example-library">
  		<context:property-placeholder ignore-unresolvable="true"
-			location="classpath*:/example-library.properties" />	
+			location="classpath:/example-library.properties" />	
 	</beans>
 	
 	<!-- task项目 -->
 	<beans profile="example-task">
 		<context:property-placeholder ignore-resource-not-found="true"
-			location="classpath*:/example-task.properties" />	
+			location="classpath:/example-task.properties" />	
 	</beans>
 </beans>
