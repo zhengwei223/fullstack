@@ -10,24 +10,20 @@ import org.lanqiao.examples.library.repository.AccountDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import javacommon.shiro.ShiroDbRealm.ShiroUser;
-import javacommon.shiro.ShiroUserService;
 import javacommon.utils.Digests;
 import javacommon.utils.Encodes;
 import javacommon.utils.Ids;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
-// Spring Bean的标识.
 @Service("accountServcie_library")
-public class AccountService implements ShiroUserService {
+public class AccountService  {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountService.class);
 
@@ -107,10 +103,5 @@ public class AccountService implements ShiroUserService {
 	 */
 	public Account findAccountByLoginName(String loginName) {
 		return accountDao.findByLoginName(loginName);
-	}
-	@Override
-	public ShiroUser findByLoginName(String loginName) {
-		Account account = findAccountByLoginName(loginName);
-		return new ShiroUser(account.id, account.email, account.name);
 	}
 }
