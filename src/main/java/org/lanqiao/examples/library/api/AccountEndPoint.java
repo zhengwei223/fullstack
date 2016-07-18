@@ -26,7 +26,7 @@ public class AccountEndPoint {
 	private static Logger logger = LoggerFactory.getLogger(AccountEndPoint.class);
 
 	@Autowired
-	@Qualifier("accountServcie")
+	@Qualifier("accountServcie_library")
 	private AccountService accountServcie;
 
 	@RequestMapping(value = "/api/accounts/login", produces = MediaTypes.JSON_UTF_8)

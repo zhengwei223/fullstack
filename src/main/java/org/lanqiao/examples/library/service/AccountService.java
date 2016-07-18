@@ -26,7 +26,7 @@ import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
 // Spring Bean的标识.
-@Service("accountServcie")
+@Service("accountServcie_library")
 public class AccountService implements ShiroUserService {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountService.class);
