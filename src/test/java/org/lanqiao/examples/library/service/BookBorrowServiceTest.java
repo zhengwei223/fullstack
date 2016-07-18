@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.fail;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.domain.Book;
 import org.lanqiao.examples.library.domain.Message;
 import org.lanqiao.examples.library.repository.BookDao;
 import org.lanqiao.examples.library.repository.MessageDao;
 import org.mockito.Mockito;
 
-import javacommon.shiro.Account;
 import javacommon.test.log.LogbackListAppender;
 
 public class BookBorrowServiceTest {

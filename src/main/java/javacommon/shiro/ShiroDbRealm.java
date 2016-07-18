@@ -4,6 +4,7 @@
 package javacommon.shiro;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -25,7 +26,7 @@ import javacommon.utils.Encodes;
 
 public class ShiroDbRealm extends AuthorizingRealm {
 
-	protected IAccountService accountService;
+	protected ShiroUserService shiroUserService;
 
 	/**
 	 * 认证回调函数,登录时调用.
@@ -33,11 +34,11 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		Account account = accountService.findAccountByLoginName(token.getUsername());
-		if (account != null) {
-			byte[] salt = Encodes.decodeHex(account.getSalt());
-			return new SimpleAuthenticationInfo(new ShiroUser(account.getId(), account.getLoginName(), account.getName()),
-					account.getHashPassword(),ByteSource.Util.bytes(salt), getName());
+		ShiroUser shiroUser = shiroUserService.findByLoginName(token.getUsername());
+		if (shiroUser != null) {
+			byte[] salt = Encodes.decodeHex(shiroUser.salt);
+			return new SimpleAuthenticationInfo(shiroUser,
+					shiroUser.hashPassword,ByteSource.Util.bytes(salt), getName());
 		} else {
 			return null;
 		}
@@ -49,9 +50,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		Account user = accountService.findAccountByLoginName(shiroUser.loginName);
+		ShiroUser user = shiroUserService.findByLoginName(shiroUser.loginName);
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addRoles(user.getRoleList());
+		info.addRoles(user.roleList);
 		return info;
 	}
 
@@ -60,14 +61,14 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	 */
 	@PostConstruct
 	public void initCredentialsMatcher() {
-		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(IAccountService.HASH_ALGORITHM);
-		matcher.setHashIterations(IAccountService.HASH_INTERATIONS);
+		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ShiroUserService.HASH_ALGORITHM);
+		matcher.setHashIterations(ShiroUserService.HASH_INTERATIONS);
 
 		setCredentialsMatcher(matcher);
 	}
 
-	public void setAccountService(IAccountService accountService) {
-		this.accountService = accountService;
+	public void setAccountService(ShiroUserService accountService) {
+		this.shiroUserService = accountService;
 	}
 
 	/**
@@ -78,15 +79,15 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		public Long id;
 		public String loginName;
 		public String name;
-
+		public String hashPassword;
+		public String salt;
+		
+		public List<String> roleList;
+		
 		public ShiroUser(Long id, String loginName, String name) {
 			this.id = id;
 			this.loginName = loginName;
 			this.name = name;
-		}
-
-		public String getName() {
-			return name;
 		}
 
 		/**

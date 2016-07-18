@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javacommon.shiro.Account;
-
 public class Message {
 
 	public Long id;

@@ -2,6 +2,7 @@ package org.lanqiao.examples.library.service;
 
 import java.util.List;
 
+import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.domain.Book;
 import org.lanqiao.examples.library.domain.Message;
 import org.lanqiao.examples.library.repository.BookDao;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javacommon.shiro.Account;
 import javacommon.utils.Clock;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;

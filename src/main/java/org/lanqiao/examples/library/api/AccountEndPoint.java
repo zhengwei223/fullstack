@@ -3,6 +3,8 @@ package org.lanqiao.examples.library.api;
 import java.util.Collections;
 import java.util.Map;
 
+import org.lanqiao.examples.library.domain.Account;
+import org.lanqiao.examples.library.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javacommon.constants.MediaTypes;
-import javacommon.shiro.Account;
-import javacommon.shiro.IAccountService;
+import javacommon.shiro.ShiroUserService;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
@@ -26,7 +27,7 @@ public class AccountEndPoint {
 
 	@Autowired
 	@Qualifier("accountServcie")
-	private IAccountService accountServcie;
+	private AccountService accountServcie;
 
 	@RequestMapping(value = "/api/accounts/login", produces = MediaTypes.JSON_UTF_8)
 	public Map<String, String> login(@RequestParam("email") String email, @RequestParam("password") String password) {
@@ -53,6 +54,6 @@ public class AccountEndPoint {
 			throw new ServiceException("User or name or password empty", ErrorCode.BAD_REQUEST);
 		}
 
-		accountServcie.register(new Account(email, name, password));
+		accountServcie.register(email, name, password);
 	}
 }

@@ -2,8 +2,10 @@ package org.lanqiao.examples.library.api;
 
 import java.util.List;
 
+import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.domain.Book;
 import org.lanqiao.examples.library.dto.BookDto;
+import org.lanqiao.examples.library.service.AccountService;
 import org.lanqiao.examples.library.service.BookAdminService;
 import org.lanqiao.examples.library.service.BookBorrowService;
 import org.slf4j.Logger;
@@ -19,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javacommon.constants.MediaTypes;
 import javacommon.mapper.BeanMapper;
-import javacommon.shiro.Account;
-import javacommon.shiro.IAccountService;
+import javacommon.shiro.ShiroUserService;
 import javacommon.web.ErrorCode;
 import javacommon.web.ServiceException;
 
@@ -31,7 +32,7 @@ public class BookEndpoint {
 	private static Logger logger = LoggerFactory.getLogger(BookEndpoint.class);
 
 	@Autowired
-	private IAccountService accountService;
+	private AccountService accountService;
 
 	@Autowired
 	private BookAdminService bookAdminService;

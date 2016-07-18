@@ -1,10 +1,11 @@
 package org.lanqiao.examples.library.service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
+import org.lanqiao.examples.library.domain.Account;
 import org.lanqiao.examples.library.repository.AccountDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import javacommon.shiro.Account;
-import javacommon.shiro.IAccountService;
+import javacommon.shiro.ShiroDbRealm.ShiroUser;
+import javacommon.shiro.ShiroUserService;
 import javacommon.utils.Digests;
 import javacommon.utils.Encodes;
 import javacommon.utils.Ids;
@@ -26,7 +27,7 @@ import javacommon.web.ServiceException;
 
 // Spring Bean的标识.
 @Service("accountServcie")
-public class AccountService implements IAccountService {
+public class AccountService implements ShiroUserService {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountService.class);
 
@@ -37,6 +38,7 @@ public class AccountService implements IAccountService {
 	@Value("${app.loginTimeoutSecs:600}")
 	private int loginTimeoutSecs;
 
+
 	// guava cache
 	private Cache<String, Account> loginUsers;
 
@@ -46,10 +48,6 @@ public class AccountService implements IAccountService {
 				.build();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lanqiao.examples.library.service.IAccountService#login(java.lang.String, java.lang.String)
-	 */
-	@Override
 	@Transactional(readOnly = true)
 	public String login(String email, String password) {
 		Account account = accountDao.findByEmail(email);
@@ -67,10 +65,6 @@ public class AccountService implements IAccountService {
 		return token;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lanqiao.examples.library.service.IAccountService#logout(java.lang.String)
-	 */
-	@Override
 	public void logout(String token) {
 		Account account = loginUsers.getIfPresent(token);
 		if (account == null) {
@@ -80,10 +74,6 @@ public class AccountService implements IAccountService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lanqiao.examples.library.service.IAccountService#getLoginUser(java.lang.String)
-	 */
-	@Override
 	public Account getLoginUser(String token) {
 
 		Account account = loginUsers.getIfPresent(token);
@@ -95,47 +85,32 @@ public class AccountService implements IAccountService {
 		return account;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lanqiao.examples.library.service.IAccountService#register(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
 	@Transactional
-	public void register(Account account) {
-		account.hashPassword = hashPassword(account.getPassword());
+	public void register(String email, String name, String password) {
+
+		if (StringUtils.isBlank(email) || StringUtils.isBlank(password)) {
+			throw new ServiceException("Invalid parameter", ErrorCode.BAD_REQUEST);
+		}
+
+		Account account = new Account();
+		account.email = email;
+		account.name = name;
+		account.hashPassword = hashPassword(password);
 		accountDao.save(account);
 	}
 
 	protected static String hashPassword(String password) {
 		return Encodes.encodeBase64(Digests.sha1(password));
 	}
-
-	@Override
+	/**
+	 * 按登录名查询用户.
+	 */
 	public Account findAccountByLoginName(String loginName) {
-		// TODO Auto-generated method stub
-		return null;
+		return accountDao.findByLoginName(loginName);
 	}
-
 	@Override
-	public List<Account> getAllAccount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Account getAccount(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateAccount(Account account) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteAccount(Long id) {
-		// TODO Auto-generated method stub
-		
+	public ShiroUser findByLoginName(String loginName) {
+		Account account = findAccountByLoginName(loginName);
+		return new ShiroUser(account.id, account.email, account.name);
 	}
 }

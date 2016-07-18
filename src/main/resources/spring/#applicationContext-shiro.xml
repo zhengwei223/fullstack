@@ -13,7 +13,9 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
-	<bean id="shiroDbRealm" class="javacommon.shiro.ShiroDbRealm"></bean>
+	<bean id="shiroDbRealm" class="javacommon.shiro.ShiroDbRealm">
+		<property name="shiroUserService" ref="accountServcie"></property>
+	</bean>
 	<!-- 权限管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<!-- 数据库认证的实现 ShiroDbRealm -->
