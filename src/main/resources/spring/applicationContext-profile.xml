@@ -16,18 +16,15 @@
 		http://www.springframework.org/schema/task/spring-task.xsd"
 	default-lazy-init="false">
 
-	<!-- 扫描的包路径 去掉mvc的注解 -->
-	<context:component-scan base-package="org.lanqiao.examples">
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
+	<!-- libarary项目 -->
+ 	<beans profile="example-library">
+ 		<context:property-placeholder ignore-unresolvable="true"
+			location="classpath*:/example-library.properties" />	
+	</beans>
 	
-	<!-- JSR303 Validator定义 -->
- 	<bean id="validator" 
- 	class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-	
-	
-	<!-- 调度任务扫描,对应参考 @Scheduled(cron="0/5 * * * * ? ") -->
-	<!-- <task:annotation-driven/> -->
-
+	<!-- task项目 -->
+	<beans profile="example-task">
+		<context:property-placeholder ignore-resource-not-found="true"
+			location="classpath*:/example-task.properties" />	
+	</beans>
 </beans>
