@@ -15,6 +15,9 @@
 		http://www.springframework.org/schema/task
 		http://www.springframework.org/schema/task/spring-task.xsd"
 	default-lazy-init="false">
+	
+	<context:property-placeholder
+			ignore-unresolvable="true" location="classpath:/db.properties" />
 
 	<!-- 扫描的包路径 去掉mvc的注解 -->
 	<context:component-scan base-package="org.lanqiao.examples">

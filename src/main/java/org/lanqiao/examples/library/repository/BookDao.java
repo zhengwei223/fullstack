@@ -22,7 +22,7 @@ public interface BookDao extends PagingAndSortingRepository<BookDto, Long> {
 
 	List<BookDto> findByBorrowerId(Long borrowerId, Pageable pageable);
 
-	List<BookDto> findAllBook(Pageable pageable);
+	List<BookDto> findAllBook(@Param("pageable") Pageable pageable);
 
 	void updateBook(BookDto book);
 

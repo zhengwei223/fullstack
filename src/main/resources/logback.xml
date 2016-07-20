@@ -22,7 +22,7 @@
 	<!--log4jdbc -->
 	<logger name="jdbc.sqltiming" level="INFO"/>
 
-	<root level="WARN">
+	<root level="debug">
 		<appender-ref ref="console" />
 		<!-- 生产环境取消下行注释 -->
 		<!-- <appender-ref ref="rollingFile" /> -->

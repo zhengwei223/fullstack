@@ -9,27 +9,50 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!-- 在指定包下扫描  此处扫描@Controller -->
-	<context:component-scan 
+	<!-- 此处扫描@Controller 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<!-- <context:component-scan
+		base-package="org.lanqiao.examples.*.api">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan> -->
+	
+	<!-- 在指定包下扫描 此处扫描@Controller -->
+	<context:component-scan
 		base-package="org.lanqiao.examples.*.api,org.lanqiao.examples.*.controller,javacommon.web" />
-<!-- 注解驱动的控制器配置 -->
-	<mvc:annotation-driven >
-	 <!-- 解决org.springframework.beans.BeanInstantiationException: 
-	 Failed to instantiate [org.springframework.data.domain.Pageable]: 
-	 Specified class is an interface -->
+	
+
+	<!-- 注解驱动的控制器配置 -->
+	<mvc:annotation-driven>
+		<!-- 解决org.springframework.beans.BeanInstantiationException: Failed to 
+			instantiate [org.springframework.data.domain.Pageable]: Specified class is 
+			an interface -->
 		<mvc:argument-resolvers>
 			<bean
 				class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
 		</mvc:argument-resolvers>
+
+		<mvc:message-converters register-defaults="true">
+			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+			<!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="prettyPrint" value="true" />
+			</bean>
+		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-<!-- 静态资源，无需过控制器 -->
+	<!-- 静态资源，无需过控制器 -->
 	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:resources mapping="/images/**" location="/images/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/pages/**" location="/pages/" />
-	
-	
-	
+
+
+
 </beans>

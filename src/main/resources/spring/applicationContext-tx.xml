@@ -14,12 +14,10 @@
 		http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
 
-
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	
 	<!-- 声明使用注解式事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 

@@ -41,13 +41,9 @@ public class BookEndpoint {
 	private BookBorrowService borrowService;
 
 	@RequestMapping(value = "/api/books", produces = MediaTypes.JSON_UTF_8)
-	public List<BookDto> listAllBook(Pageable pageable) {
+	public PAGEJSON listAllBook(Pageable pageable) {
 		List<BookDto> books = bookAdminService.findAll(pageable);
-		/*int c=bookAdminService.findAllBookCount();
-		PAGEJSON p=new PAGEJSON();
-		p.setRows(books);
-		p.setTotal(c);*/
-		return BeanMapper.mapList(books, BookDto.class);
+		return  new PAGEJSON(pageable, BeanMapper.mapList(books, BookDto.class));
 	}
 
 	/**

@@ -38,6 +38,7 @@
 	</sql>
 	<select id="findAllBook" resultType="org.lanqiao.examples.library.dto.BookDto">
 		<include refid="selectBook" />
+		limit #{param1.pageNumber} , #{param1.pageSize}
 	</select>
 	<select id="findOne" parameterType="long" resultType="org.lanqiao.examples.library.dto.BookDto">
 		<include refid="selectBook" />

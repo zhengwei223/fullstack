@@ -13,6 +13,7 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
+
 	<bean id="shiroDbRealm" class="javacommon.shiro.ShiroDbRealm">
 		<property name="shiroUserService" ref="accountServcie_library"></property>
 	</bean>
@@ -23,7 +24,7 @@
 		<!-- 缓存管理器 -->
 		<property name="cacheManager" ref="shiroEhcacheManager" />
 	</bean>
-	
+
 	<!-- shiro的主过滤器,beanId 和web.xml中配置的filter name需要保持一致 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<!-- 安全管理器 -->
@@ -37,10 +38,10 @@
 				/css/** = anon
 				/images/** = anon
 				/pages/** = anon
-				<!-- S 目前将upload文件权限放开，等文件系统模块完成以后再修改  -->
+				<!-- S 目前将upload文件权限放开，等文件系统模块完成以后再修改 -->
 				/upload/**=anon
-				<!-- E  -->
-				
+				<!-- E -->
+
 				/login = authc
 				/logout = logout
 				/static/** = anon
@@ -51,29 +52,18 @@
 			</value>
 		</property>
 		<!-- 声明自定义的过滤器 -->
-		<!-- <property name="filters">
-			<map>
-			    访问日志记录的过滤器
-			    <entry key="framefwlog" value-ref="framefwlog"></entry>
-			    权限校验的过滤器
-				<entry key="frameperms" value-ref="frameperms"></entry>
-				 前台用户过滤器
-				<entry key="frontuser" value-ref="frontuser"></entry>
-				
-				 后台用户过滤器
-				<entry key="systemuser" value-ref="systemuser"></entry>
-			    踢出上个账户的过滤器
-			    <entry key="keepone" value-ref="keepone"/>  
-			    
-			</map>
-		</property> -->
+		<!-- <property name="filters"> <map> 访问日志记录的过滤器 <entry key="framefwlog" 
+			value-ref="framefwlog"></entry> 权限校验的过滤器 <entry key="frameperms" value-ref="frameperms"></entry> 
+			前台用户过滤器 <entry key="frontuser" value-ref="frontuser"></entry> 后台用户过滤器 <entry 
+			key="systemuser" value-ref="systemuser"></entry> 踢出上个账户的过滤器 <entry key="keepone" 
+			value-ref="keepone"/> </map> </property> -->
 	</bean>
-	
+
 	<!-- 用户授权信息Cache, 采用EhCache -->
 	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml"/>
+		<property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml" />
 	</bean>
-	
+
 	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 </beans>
