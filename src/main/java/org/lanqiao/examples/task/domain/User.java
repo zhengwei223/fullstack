@@ -5,17 +5,23 @@
  *******************************************************************************/
 package org.lanqiao.examples.task.domain;
 
-import java.beans.Transient;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
 
+@Entity
+@Table(name = "ss_user")
 public class User extends IdEntity {
 	private String loginName;
 	private String name;
@@ -32,6 +38,7 @@ public class User extends IdEntity {
 		this.id = id;
 	}
 
+	@NotBlank
 	public String getLoginName() {
 		return loginName;
 	}
@@ -40,6 +47,7 @@ public class User extends IdEntity {
 		this.loginName = loginName;
 	}
 
+	@NotBlank
 	public String getName() {
 		return name;
 	}

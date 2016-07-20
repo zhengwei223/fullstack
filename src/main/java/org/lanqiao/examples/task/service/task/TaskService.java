@@ -8,15 +8,20 @@ package org.lanqiao.examples.task.service.task;
 import java.util.List;
 import java.util.Map;
 
+import org.lanqiao.examples.task.domain.Task;
+import org.lanqiao.examples.task.repository.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.lanqiao.examples.task.domain.Task;
-import org.lanqiao.examples.task.repository.TaskDao;
+
+import javacommon.persistence.DynamicSpecifications;
+import javacommon.persistence.SearchFilter;
+import javacommon.persistence.SearchFilter.Operator;
 
 // Spring Bean的标识.
 @Component
@@ -45,9 +50,9 @@ public class TaskService {
 	public Page<Task> getUserTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		//Specification<Task> spec = buildSpecification(userId, searchParams);
+		Specification<Task> spec = buildSpecification(userId, searchParams);
 
-		return taskDao.findAll(pageRequest);
+		return taskDao.findAll(spec, pageRequest);
 	}
 
 	/**
@@ -67,12 +72,12 @@ public class TaskService {
 	/**
 	 * 创建动态查询条件组合.
 	 */
-/*	private Specification<Task> buildSpecification(Long userId, Map<String, Object> searchParams) {
+	private Specification<Task> buildSpecification(Long userId, Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
 		Specification<Task> spec = DynamicSpecifications.bySearchFilter(filters.values(), Task.class);
 		return spec;
-	}*/
+	}
 
 	@Autowired
 	public void setTaskDao(TaskDao taskDao) {

@@ -8,6 +8,8 @@ package org.lanqiao.examples.task.api;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Validator;
+
 import org.lanqiao.examples.task.domain.Task;
 import org.lanqiao.examples.task.service.task.TaskService;
 import org.slf4j.Logger;
@@ -24,8 +26,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javacommon.beanvalidator.BeanValidators;
 import javacommon.constants.MediaTypes;
-import javacommon.web.ServiceException;
 
 /**
  * Task的Restful API的Controller.
@@ -41,6 +43,9 @@ public class TaskRestController {
 	@Autowired
 	private TaskService taskService;
 
+	@Autowired
+	private Validator validator;
+
 	@RequestMapping(method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
 	public List<Task> list() {
 		return taskService.getAllTask();
@@ -52,7 +57,7 @@ public class TaskRestController {
 		if (task == null) {
 			String message = "任务不存在(id:" + id + ")";
 			logger.warn(message);
-			throw new ServiceException(HttpStatus.NOT_FOUND, message);
+			throw new RestException(HttpStatus.NOT_FOUND, message);
 		}
 		return task;
 	}
@@ -60,7 +65,7 @@ public class TaskRestController {
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaTypes.JSON)
 	public ResponseEntity<?> create(@RequestBody Task task, UriComponentsBuilder uriBuilder) {
 		// 调用JSR303 Bean Validator进行校验, 异常将由RestExceptionHandler统一处理.
-		//BeanValidators.validateWithException(validator, task);
+		BeanValidators.validateWithException(validator, task);
 
 		// 保存任务
 		taskService.saveTask(task);
@@ -79,7 +84,7 @@ public class TaskRestController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update(@RequestBody Task task) {
 		// 调用JSR303 Bean Validator进行校验, 异常将由RestExceptionHandler统一处理.
-		//BeanValidators.validateWithException(validator, task);
+		BeanValidators.validateWithException(validator, task);
 
 		// 保存任务
 		taskService.saveTask(task);

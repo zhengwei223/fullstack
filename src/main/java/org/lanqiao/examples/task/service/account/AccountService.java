@@ -12,17 +12,17 @@ import org.apache.shiro.SecurityUtils;
 import org.lanqiao.examples.task.domain.User;
 import org.lanqiao.examples.task.repository.TaskDao;
 import org.lanqiao.examples.task.repository.UserDao;
+import org.lanqiao.examples.task.service.ServiceException;
+import org.lanqiao.examples.task.service.account.ShiroDbRealm.ShiroUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javacommon.shiro.ShiroDbRealm.ShiroUser;
 import javacommon.utils.Clock;
 import javacommon.utils.Digests;
 import javacommon.utils.Encodes;
-import javacommon.web.ServiceException;
 
 /**
  * 用户管理类.
@@ -30,7 +30,7 @@ import javacommon.web.ServiceException;
  * @author calvin
  */
 // Spring Service Bean的标识.
-@Service("accountService")
+@Component
 @Transactional
 public class AccountService {
 
